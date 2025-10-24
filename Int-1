@@ -1,0 +1,82 @@
+uint8_t flag = 0;
+
+void interrupt_handler(void) {
+    flag = 1;
+}
+
+void main_loop(void) {
+    while (1) {
+        if (flag) {
+            printf("Interrupt occurred\n");
+            doSomething();
+            flag = 0;
+        }
+    }
+}
+
+========================================
+void main_loop(void) {
+    while (1) {
+        if (flag) {
+            printf("Interrupt occurred\n");
+            doSomething();
+            __disable_irq();  // or equivalent
+            flag = 0;
+            __enable_irq();
+        }
+    }
+}
+
+============================================
+let’s look carefully at what happens if you don’t use volatile in your example.
+What the compiler might think
+
+From the compiler’s point of view:
+
+The variable flag is only modified in main_loop() (because the compiler doesn’t "see" interrupts as asynchronous events).
+
+There’s no visible code in main_loop() that changes flag.
+
+So, the compiler assumes that flag will never change inside the loop.
+
+Therefore, the compiler might optimize this:
+
+while (1) {
+    if (flag) {
+        ...
+    }
+}
+
+
+load flag into register r0   ; read once
+check r0                     ; if zero, skip body
+jump to start of loop        ; loop forever, but never re-read flag
+
+
+As a result:
+The loop never re-checks memory.
+Even when the interrupt sets flag = 1, the main loop keeps seeing the old cached value (0).
+So the program never detects the interrupt!
+
+=============================================
+What volatile changes
+
+When you write:
+volatile uint8_t flag = 0;
+you tell the compiler:
+“flag might change at any time — always re-read it from memory each time it’s used.”
+
+Now the compiler generates something more like:
+
+loop:
+    load flag from memory     ; always re-read
+    test flag
+    if zero, jump to loop
+    ... handle interrupt ...
+    store 0 into flag
+    jump to loop
+
+
+This ensures that changes made by the interrupt handler are always seen by the main loop.
+
+
