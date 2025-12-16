@@ -83,3 +83,34 @@ union U {
 Use cases:
 struct → logical grouping
 union → memory optimization, hardware registers
+
+
+6. Structure Padding & Alignment
+Why padding exists:
+CPU accesses aligned memory faster
+Compiler inserts unused bytes
+
+struct A {
+    char c;   // 1 byte
+    int i;    // 4 bytes
+};
+
+Memory layout (32-bit / 64-bit):
+| c | pad pad pad | i |
+
+Size = 8 bytes, not 5
+Control padding
+#pragma pack(1)
+
+7. Where does malloc get memory from?
+On Linux / Unix:
+
+malloc() does not directly ask the OS for every allocation.
+Instead, it requests large chunks from the OS using:
+brk()/sbrk() → grows the process heap (small/medium allocations)
+mmap() → large allocations (e.g., >128 KB in glibc)
+These chunks form the heap arena managed by malloc.
+
+malloc() is a dynamic memory allocator. Internally, it manages a large pool of heap memory and hands out 
+chunks on request. The exact implementation differs (glibc, jemalloc, tcmalloc, RTOS allocators), 
+but the core principles are the same.
