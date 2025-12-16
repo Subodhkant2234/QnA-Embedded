@@ -32,3 +32,19 @@ Object deleted but pointer not reset
 Fix
 free(p);
 p = NULL;
+
+3. What Happens If You Access Freed Memory?
+
+This is undefined behavior.
+int *p = new int(10);
+delete p;
+*p = 20;   // ❌ UB
+Possible outcomes
+Crash (segmentation fault)
+Corrupt heap
+Silent bugs
+Security vulnerability
+
+Best Practice
+delete p;
+p = nullptr;
