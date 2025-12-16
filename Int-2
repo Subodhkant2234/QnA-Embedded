@@ -68,3 +68,18 @@ Valgrind (Linux)
 AddressSanitizer (ASAN)
 Visual Studio Leak Detector
 Static analysis tools
+
+5.struct vs union
+Feature	struct	                    union
+Memory	Separate for each member	Shared
+Size	Sum of members (+ padding)	Size of largest member
+Access	All members valid	Only one at a time
+union U {
+    int i;
+    float f;
+};
+
+➡️ Writing to f overwrites i
+Use cases:
+struct → logical grouping
+union → memory optimization, hardware registers
