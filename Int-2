@@ -2,7 +2,7 @@
 Undefined behavior means:
 The C/C++ standard gives no guarantee about what happens
 
-Examples
+Examples:
 Accessing out-of-bounds array
 Using uninitialized variable
 Dereferencing NULL pointer
@@ -24,12 +24,12 @@ free(p);
 // p is now dangling
 *p = 10;  // ❌ undefined behavior
 
-Causes
+Causes:
 Access after free()
 Returning address of local variable
 Object deleted but pointer not reset
 
-Fix
+Fix:
 free(p);
 p = NULL;
 
@@ -39,12 +39,32 @@ This is undefined behavior.
 int *p = new int(10);
 delete p;
 *p = 20;   // ❌ UB
-Possible outcomes
+
+Possible outcomes:
 Crash (segmentation fault)
 Corrupt heap
 Silent bugs
 Security vulnerability
 
-Best Practice
+Best Practice:
 delete p;
 p = nullptr;
+
+4. Memory Leak
+A memory leak occurs when allocated memory is never freed, causing memory loss over time.
+
+void leak() {
+    int *p = new int(10);
+    // delete p missing ❌
+}
+
+Effects:
+Increased memory usage
+Program slowdown
+System crash (embedded systems)
+
+Detection Tools:
+Valgrind (Linux)
+AddressSanitizer (ASAN)
+Visual Studio Leak Detector
+Static analysis tools
