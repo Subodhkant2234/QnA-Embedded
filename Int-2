@@ -1,1 +1,18 @@
+1. What is undefined behavior?
+Undefined behavior means:
+The C/C++ standard gives no guarantee about what happens
 
+Examples
+Accessing out-of-bounds array
+Using uninitialized variable
+Dereferencing NULL pointer
+Accessing freed memory
+Integer overflow (signed)
+
+int a[5];
+a[10] = 3;  // ❌ UB
+
+➡️ Program may:
+Crash
+Produce wrong output
+Work “sometimes” (dangerous!)
