@@ -233,4 +233,18 @@ Here:
 Hardware updates the register → volatile
 Software must only read it → const
 
-15) 
+15) What are common memory corruption bugs and how do you detect them?
+Memory corruption bugs occur when a program reads or writes outside valid memory, 
+leading to undefined behavior, crashes, or silent data corruption.
+
+Memory corruption bugs include buffer overflows, use-after-free, and uninitialized access, 
+and are detected using compiler warnings, sanitizers, static analysis, and runtime checks like Valgrind or MPU protection in embedded systems.
+
+Buffer overflow / out-of-bounds access
+Double free
+Use-after-free
+Uninitialized memory access
+Dangling pointers
+Memory leaks (related but common)
+Stack overflow
+Incorrect pointer arithmetic
