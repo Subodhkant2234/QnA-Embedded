@@ -149,3 +149,33 @@ volatile int counter;
 counter++; // NOT atomic
 
 👉 Must combine volatile with mutex, atomic ops, or critical sections.
+
+9)Why is dynamic memory risky in safety-critical systems?
+Dynamic memory is risky because it breaks determinism and reliability.
+Major risks:
+❌ Unpredictable allocation time
+❌ Fragmentation → allocation failures at runtime
+❌ Memory leaks
+❌ Heap corruption (use-after-free, double free)
+❌ Difficult to certify and test
+
+Result:
+System may fail after hours or days, which is unacceptable in safety systems.
+
+10) What happens if memory gets fragmented?
+Fragmentation occurs when free memory exists but not contiguously.
+Effects:
+malloc() fails even though total free memory is sufficient
+Increased allocation time
+System instability over long runtime
+Example:
+[Free 10B][Used][Free 20B][Used][Free 15B]
+Request = 30B → ❌ fails
+
+👉 External fragmentation is the main concern in embedded systems.
+
+11) Stack vs Heap vs Static Memory — when to use what?
+Memory Type	      Characteristics	               When to Use
+Stack	          Fast, automatic, limited size	   Local variables, function calls
+Heap	          Flexible, dynamic, slow	       Variable-size data, optional features
+Static / Global	  Fixed, predictable	           Config, buffers, RTOS objects
