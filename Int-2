@@ -179,3 +179,17 @@ Memory Type	      Characteristics	               When to Use
 Stack	          Fast, automatic, limited size	   Local variables, function calls
 Heap	          Flexible, dynamic, slow	       Variable-size data, optional features
 Static / Global	  Fixed, predictable	           Config, buffers, RTOS objects
+
+12) How do you ensure deterministic behavior?
+Determinism means bounded and predictable execution time.
+
+Key techniques:
+Avoid dynamic allocation at runtime
+Use static allocation or memory pools
+Fixed task priorities (RTOS)
+Bounded loops and ISRs
+WCET analysis
+Avoid recursion
+Use priority inheritance
+Pre-allocate all resources at startup
+Determinism is mandatory in real-time and safety systems.
