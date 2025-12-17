@@ -114,3 +114,38 @@ These chunks form the heap arena managed by malloc.
 malloc() is a dynamic memory allocator. Internally, it manages a large pool of heap memory and hands out 
 chunks on request. The exact implementation differs (glibc, jemalloc, tcmalloc, RTOS allocators), 
 but the core principles are the same.
+Internally:
+Requests large memory chunks from the OS (brk/sbrk or mmap)
+Splits them into blocks with metadata (size, status)
+Maintains free lists / bins for different sizes
+
+On allocation:
+Adjusts size + alignment
+Finds a suitable free block
+Splits it if larger
+
+On free():
+Marks block free
+Coalesces adjacent free blocks to reduce fragmentation
+Returned pointer points after metadata, not to raw OS memory.
+
+📌 Key point: execution time and allocation success are non-deterministic
+
+8) What is volatile and when does it fail?
+volatile tells the compiler:
+“This variable may change unexpectedly — don’t optimize accesses.”
+Used for:
+Hardware registers
+ISR-shared variables
+Memory-mapped I/O
+When volatile fails:
+❌ It does not ensure atomicity
+❌ It does not ensure thread safety
+❌ It does not prevent race conditions
+❌ It does not provide memory ordering
+
+Example failure:
+volatile int counter;
+counter++; // NOT atomic
+
+👉 Must combine volatile with mutex, atomic ops, or critical sections.
