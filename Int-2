@@ -193,3 +193,44 @@ Avoid recursion
 Use priority inheritance
 Pre-allocate all resources at startup
 Determinism is mandatory in real-time and safety systems.
+
+13) When is inline useful?
+Use inline for small, frequently called functions where reduced call overhead improves performance, 
+but avoid it when it increases code size or harms cache behavior.
+
+inline is useful when a function is small, frequently called, and the function call overhead is significant compared to the function body.
+It tells the compiler to replace the function call with the function body, which can improve performance—but it is only a hint, not a guarantee.
+When NOT to use inline:
+
+Large or complex functions
+Recursive functions
+When code size matters (risk of code bloat)
+When the compiler can already optimize better on its own
+
+14) What is volatile + const use case?
+const volatile is used when a variable can change outside the program’s control, but the program itself must not modify it.
+volatile tells the compiler the value may change asynchronously, so it must always be re-read.
+const prevents the software from writing to it.
+
+Where it’s used:
+
+Read-only memory-mapped hardware registers
+Status flags updated by ISR, DMA, or peripherals
+Safety-critical embedded systems to prevent accidental writes
+
+Important clarification:
+volatile does not make access atomic
+It does not provide thread safety
+It only prevents incorrect compiler optimizations
+
+Typical example (embedded systems) : 
+
+#define STATUS_REG (*(const volatile uint32_t*)0x40000000)
+if (STATUS_REG & READY_BIT) {
+    // updated by hardware
+}
+Here:
+Hardware updates the register → volatile
+Software must only read it → const
+
+15) 
