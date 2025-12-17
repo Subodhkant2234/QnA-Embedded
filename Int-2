@@ -248,3 +248,15 @@ Dangling pointers
 Memory leaks (related but common)
 Stack overflow
 Incorrect pointer arithmetic
+
+16) Why avoid malloc() / free() at runtime in embedded systems?
+Because dynamic allocation breaks determinism, reliability, and safety, which are core requirements in embedded and real-time systems.
+We avoid malloc/free at runtime in embedded systems because they introduce non-deterministic timing, fragmentation, and 
+unrecoverable failures, which violate real-time and safety requirements.
+
+Therefore, in embedded systems we prefer:
+
+Static allocation
+Pre-allocated memory pools
+Or using malloc() only during system initialization, never during runtime
+This ensures deterministic behavior, predictable memory usage, and higher system reliability.
