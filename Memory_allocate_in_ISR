@@ -1,0 +1,14 @@
+Recommended (better) pattern — don’t allocate in ISR:
+1. Pre-allocate Before ISR(eg Probe), ISR only writes into the buffer.
+2. Use bottom-half and allocate there.
+
+In ISR, if mandatory use kmalloc with GFP_ATOMIC Flag to allocate it.
+You can allocate memory inside an ISR, but only with
+GFP_ATOMIC — and only if absolutely necessary.
+And even then, the preferred approach is still avoid allocation in ISR and defer to a bottom-half (workqueue/tasklet).
+
+
+GFP_ATOMIC:
+✔ never sleeps
+✔ tries to allocate from emergency pools
+✔ is safe in interrupt context
